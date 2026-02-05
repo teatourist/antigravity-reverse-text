@@ -16,15 +16,18 @@ export default function Comments() {
         try {
             const { error } = await supabase
                 .from('comments')
-                .insert([{ text: comment }])
+                .insert([{ content: comment }])
 
-            if (error) throw error
+            if (error) {
+                console.error('Supabase error during insert:', error)
+                throw error
+            }
 
             setComment('')
             setMessage('Comment submitted successfully!')
         } catch (err) {
-            console.error('Error submitting comment:', err)
-            setMessage(`Error: ${err.message}`)
+            console.error('Submission catch block:', err)
+            setMessage(`Error: ${err.message}. (Table: 'comments', Column: 'content')`)
         } finally {
             setIsSubmitting(false)
         }

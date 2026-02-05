@@ -9,11 +9,15 @@ function App() {
         async function checkConnection() {
             try {
                 const { data, error } = await supabase.from('comments').select('count', { count: 'exact', head: true })
-                if (error) throw error
-                setStatus('Hello World! Supabase connection successful.')
+                if (error) {
+                    console.error('Supabase Connection Error:', error)
+                    setStatus(`Supabase connection error: ${error.message}. (Table: 'comments')`)
+                } else {
+                    setStatus('Hello World! Supabase connection successful.')
+                }
             } catch (err) {
-                console.error('Supabase connection error:', err)
-                setStatus('Hello World! (Supabase connection failed - check .env)')
+                console.error('Catch error:', err)
+                setStatus(`Unexpected error: ${err.message}`)
             }
         }
         checkConnection()
