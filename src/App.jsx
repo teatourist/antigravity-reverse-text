@@ -32,7 +32,7 @@ function App() {
             minHeight: '100vh',
             padding: '2rem',
             fontFamily: 'Inter, system-ui, sans-serif',
-            background: 'linear-gradient(135deg, #f472b6 0%, #db2777 100%)',
+            background: 'linear-gradient(135deg, #0d9488 0%, #0284c7 100%)',
             color: 'white',
             width: '100%',
             boxSizing: 'border-box',

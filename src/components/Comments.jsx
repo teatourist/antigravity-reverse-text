@@ -106,7 +106,7 @@ export default function Comments() {
                         padding: '12px',
                         borderRadius: '8px',
                         border: 'none',
-                        backgroundColor: '#db2777',
+                        backgroundColor: '#0d9488',
                         color: 'white',
                         fontSize: '1rem',
                         fontWeight: '600',
