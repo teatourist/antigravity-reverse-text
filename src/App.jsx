@@ -28,6 +28,7 @@ function App() {
             fontFamily: 'Inter, system-ui, sans-serif',
             background: 'linear-gradient(135deg, #f472b6 0%, #db2777 100%)',
             color: 'white',
+            width: '100%',
             textAlign: 'center'
         }}>
             <h1 style={{ fontSize: '3rem', marginBottom: '1rem', animation: 'fadeIn 2s' }}>Hello World</h1>
