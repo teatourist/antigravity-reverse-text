@@ -38,8 +38,19 @@ function App() {
             boxSizing: 'border-box',
             textAlign: 'center'
         }}>
-            <h1 style={{ fontSize: '3rem', marginBottom: '1rem', animation: 'fadeIn 2s' }}>Hello World</h1>
-            <p style={{ fontSize: '1.2rem', opacity: 0.9 }}>{status}</p>
+            <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', animation: 'fadeIn 2s' }}>
+                Automated Antigravity Develop, Commit and Deploy Cycle Example
+            </h1>
+            <p style={{
+                fontSize: '1.2rem',
+                opacity: 0.9,
+                maxWidth: '800px',
+                lineHeight: '1.6',
+                marginBottom: '2rem'
+            }}>
+                This is a React app solution, sitting on a development framework of Vibe Coding, GitHub, Vercel and Supabase.
+            </p>
+            <p style={{ fontSize: '1rem', opacity: 0.7, marginBottom: '2rem' }}>{status}</p>
 
             <Comments />
 
