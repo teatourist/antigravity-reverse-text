@@ -40,6 +40,85 @@
             lightning-fast delivery to users worldwide without manual intervention.
         </p>
     </div>
+
+    <!-- Supabase Comment Section -->
+    <div
+        style="margin-top: 3rem; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 500px;">
+        <h3 style="margin-top: 0;">Leave a Comment</h3>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+            <input type="text" id="commentInput" placeholder="Enter your comment"
+                style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; flex-grow: 1;">
+            <button id="submitBtn"
+                style="padding: 10px 20px; background-color: #3ecf8e; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Submit</button>
+        </div>
+
+        <button id="loadBtn"
+            style="width: 100%; padding: 10px 20px; background-color: #333; color: white; border: none; border-radius: 4px; cursor: pointer;">Load
+            Comments from Database</button>
+
+        <div id="commentsList" style="margin-top: 20px; text-align: left; max-height: 300px; overflow-y: auto;">
+            <!-- Comments will appear here -->
+        </div>
+    </div>
+
+    <!-- Supabase Logic -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://uuylolifmlscpledepco.supabase.co'
+        const supabaseKey = 'sb_publishable_5LuOItUNo5jzpYt9HBsfug_I7SpXL9e'
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+        // Submit Comment
+        document.getElementById('submitBtn').addEventListener('click', async () => {
+            const input = document.getElementById('commentInput');
+            const content = input.value.trim();
+            if (!content) return alert('Please enter a comment');
+
+            const { data, error } = await supabase
+                .from('comments')
+                .insert([{ content }])
+                .select();
+
+            if (error) {
+                console.error('Error:', error);
+                alert('Error submitting comment: ' + error.message);
+            } else {
+                alert('Comment submitted!');
+                input.value = '';
+                loadComments(); // Auto-reload
+            }
+        });
+
+        // Load Comments
+        async function loadComments() {
+            const list = document.getElementById('commentsList');
+            list.innerHTML = '<p style="text-align:center; color:#888;">Loading...</p>';
+
+            const { data, error } = await supabase
+                .from('comments')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error:', error);
+                list.innerHTML = '<p style="color:red;">Error loading comments: ' + error.message + '</p>';
+            } else {
+                if (!data || data.length === 0) {
+                    list.innerHTML = '<p style="text-align:center; color:#888;">No comments yet.</p>';
+                    return;
+                }
+
+                list.innerHTML = data.map(comment => `
+                    <div style="background: #f9f9f9; padding: 10px; margin-bottom: 8px; border-radius: 4px; border-left: 4px solid #3ecf8e;">
+                        <p style="margin: 0; font-size: 14px;">${comment.content}</p>
+                        <small style="color: #999; font-size: 10px;">${new Date(comment.created_at).toLocaleString()}</small>
+                    </div>
+                `).join('');
+            }
+        }
+
+        document.getElementById('loadBtn').addEventListener('click', loadComments);
+    </script>
 </body>
 
 </html>
