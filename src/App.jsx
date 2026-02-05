@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './lib/supabaseClient'
+import Comments from './components/Comments'
 
 function App() {
     const [status, setStatus] = useState('Checking Supabase connection...')
@@ -24,15 +25,19 @@ function App() {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '100vh',
+            minHeight: '100vh',
+            padding: '2rem',
             fontFamily: 'Inter, system-ui, sans-serif',
             background: 'linear-gradient(135deg, #f472b6 0%, #db2777 100%)',
             color: 'white',
             width: '100%',
+            boxSizing: 'border-box',
             textAlign: 'center'
         }}>
             <h1 style={{ fontSize: '3rem', marginBottom: '1rem', animation: 'fadeIn 2s' }}>Hello World</h1>
             <p style={{ fontSize: '1.2rem', opacity: 0.9 }}>{status}</p>
+
+            <Comments />
 
             <style>{`
         @keyframes fadeIn {
