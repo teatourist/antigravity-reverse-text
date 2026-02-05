@@ -83,6 +83,11 @@
         <div id="commentsList" style="margin-top: 20px; text-align: left; max-height: 300px; overflow-y: auto;">
             <!-- Comments will appear here -->
         </div>
+
+        <!-- Debug Log -->
+        <div id="debugLog"
+            style="margin-top: 20px; padding: 10px; background: #000; color: #0f0; font-family: monospace; font-size: 12px; border-radius: 4px; text-align: left; min-height: 50px; display: none;">
+        </div>
     </div>
 
     <!-- Supabase Logic -->
@@ -92,31 +97,59 @@
         const supabaseKey = 'sb_publishable_5LuOItUNo5jzpYt9HBsfug_I7SpXL9e'
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
+        // Debug Helper
+        const debugLog = document.getElementById('debugLog');
+        function log(msg) {
+            debugLog.style.display = 'block';
+            console.log(msg);
+            const line = document.createElement('div');
+            line.innerHTML = `<span style="opacity:0.5">[${new Date().toLocaleTimeString()}]</span> ${msg}`;
+            debugLog.appendChild(line);
+        }
+
+        // Override console.error and alert for visibility
+        const originalError = console.error;
+        console.error = (...args) => {
+            originalError(...args);
+            log('ERROR: ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' '));
+        };
+        window.alert = (msg) => log('ALERT: ' + msg);
+
+        log('Supabase initialized. Url: ' + supabaseUrl);
+
         // Submit Comment
         document.getElementById('submitBtn').addEventListener('click', async () => {
+            log('Submit button clicked');
             const btn = document.getElementById('submitBtn');
             const input = document.getElementById('commentInput');
             const content = input.value.trim();
 
-            if (!content) return alert('Please enter a comment');
+            if (!content) return log('Empty content returned');
 
-            // Optimistic UI updates
+            // UI Feedback
             const originalText = btn.innerText;
             btn.innerText = 'Sending...';
             btn.disabled = true;
-            input.value = ''; // Clear immediately
 
-            const { data, error } = await supabase
-                .from('comments')
-                .insert([{ content }])
-                .select();
+            log('Sending insert request for: ' + content);
 
-            if (error) {
-                console.error('Error:', error);
-                alert('Error submitting comment: ' + error.message);
-                input.value = content; // Restore on error
-            } else {
-                loadComments(); // Auto-reload
+            try {
+                const { data, error } = await supabase
+                    .from('comments')
+                    .insert([{ content }])
+                    .select();
+
+                if (error) {
+                    log('Insert FAILED: ' + JSON.stringify(error));
+                    console.error('Insert Error:', error);
+                } else {
+                    log('Insert SUCCESS. Data: ' + JSON.stringify(data));
+                    input.value = ''; // Clear on success only for debug
+                    loadComments();
+                }
+            } catch (err) {
+                log('EXCEPTION: ' + err.message);
+                console.error(err);
             }
 
             // Reset button
